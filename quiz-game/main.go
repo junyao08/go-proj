@@ -43,7 +43,7 @@ func main() {
 	quizTimer.Stop()
 }
 
-func readQuizQuestions() {
+func readQuizQuestions() result {
 	csvFile, err := os.Open("problems.csv")
 	if err != nil {
 		fmt.Println(err)
@@ -78,6 +78,7 @@ func readQuizQuestions() {
 
 	r := result{}
 	r.calcResult(question, wrongAnswer, correctAnswer)
+	return r
 }
 
 func (r result) calcResult(question, wrongAnswer, correctAnswer int) {
