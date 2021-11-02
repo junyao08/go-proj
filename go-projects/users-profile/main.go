@@ -7,18 +7,29 @@ type User struct {
 	age           int
 }
 
-type UserList []string
+type UserList struct {
+	User
+}
 
 func main() {
-	emOne := User{
+	userOne := User{
 		name:    "John",
 		country: "England",
 		age:     23,
 	}
 
-	ne := newEmployee(emOne)
-	fmt.Println(ne)
-	ul := UserList{}
+	ne := newEmployee(userOne)
+	ul := ne
+
+	ul.showUsers()
+
+	modUserOne := User{
+		name:    "Sam",
+		country: "Germany",
+		age:     30,
+	}
+
+	ul.modifyUser(modUserOne)
 
 	ul.showUsers()
 
@@ -31,15 +42,18 @@ func newEmployee(u User) UserList {
 		age:     u.age,
 	}
 
-	el := UserList{}
-
-	el = append(el, "Name: "+user.name+"Country: "+user.country+"Age: "+string(user.age))
+	el := UserList{
+		User: user,
+	}
 
 	return el
 }
 
 func (ul UserList) showUsers() {
-	for _, user := range ul {
-		fmt.Println(user)
-	}
+	fmt.Println("Name:", ul.name, "Country:", ul.country, "Age:", ul.age)
+
+}
+
+func (user *User) modifyUser(newUser User) {
+	*user = newUser
 }
