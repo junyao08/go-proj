@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"go-proj/practice-lab/go-projects/web-service-gin/dal"
 	"go-proj/practice-lab/go-projects/web-service-gin/extensions"
 	"go-proj/practice-lab/go-projects/web-service-gin/models"
 
@@ -18,6 +19,32 @@ var albums = []models.Album{
 }
 
 func GetAlbums(c *gin.Context) {
+	connectionString := dal.ConnectionString()
+
+	result, err := connectionString.Query("SELECT * FROM albumDB")
+	var albums []models.Album
+	if err != nil {
+		return
+	}
+
+	for result.Next() {
+		var album models.Album
+
+		err = result.Scan(&album.ID, &album.Title, &album.Artist, &album.Price)
+		if err != nil {
+			return
+		}
+
+		albums = append(albums, album)
+	}
+
+	if result.Err(); err != nil {
+		return
+	}
+
+	defer result.Close()
+	defer connectionString.Close()
+
 	c.IndentedJSON(http.StatusOK, albums)
 }
 
